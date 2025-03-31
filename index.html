@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tidskalkulator</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background-color: #f4f4f4; 
+            color: #333; 
+            text-align: center;
+        }
+        .container {
+            max-width: 400px; 
+            margin: auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h2 { color: #444; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, button { margin-top: 5px; padding: 10px; width: 100%; border-radius: 5px; border: 1px solid #ccc; }
+        button { 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            cursor: pointer;
+        }
+        button:hover { background-color: #0056b3; }
+        .result-box {
+            margin-top: 15px; 
+            padding: 10px; 
+            border-radius: 5px; 
+            font-weight: bold; 
+        }
+        .past { background-color: #ffdddd; color: #a00; }
+        .future { background-color: #ddffdd; color: #060; }
+        .divider { margin: 20px 0; height: 1px; background-color: #ccc; }
+        .checkbox-container { text-align: left; margin-top: 15px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Tidskalkulator</h2>
+
+        <label for="startTid">Velg tidspunkt:</label>
+        <input type="datetime-local" id="startTid">
+
+        <button onclick="beregnTider()">Beregn tider</button>
+
+        <div class="divider"></div>
+
+        <div class="result-box past" id="fortidResultat"></div>
+        <div class="result-box future" id="fremtidResultat"></div>
+
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" id="brukSluttTid" onchange="toggleSluttTid()"> Bruk sluttidspunkt
+            </label>
+        </div>
+
+        <div id="sluttTidDiv" class="hidden">
+            <label for="sluttTid">Velg sluttidspunkt:</label>
+            <input type="datetime-local" id="sluttTid">
+            <button onclick="beregnMellom()">Beregn mellom</button>
+            <div class="result-box" id="mellomResultat"></div>
+        </div>
+    </div>
+
+    <script>
+        function beregnTider() {
+            let startTid = new Date(document.getElementById("startTid").value);
+            if (isNaN(startTid)) {
+                alert("Velg et gyldig tidspunkt!");
+                return;
+            }
+
+            let minus11 = new Date(startTid.getTime() - 11 * 60 * 60 * 1000);
+            let pluss11 = new Date(startTid.getTime() + 11 * 60 * 60 * 1000);
+            let minus36 = new Date(startTid.getTime() - 36 * 60 * 60 * 1000);
+            let pluss36 = new Date(startTid.getTime() + 36 * 60 * 60 * 1000);
+
+            document.getElementById("fortidResultat").innerHTML = `
+                <strong>Fortid</strong><br>
+                - 11 timer: ${formaterTid(minus11)}<br>
+                - 36 timer: ${formaterTid(minus36)}
+            `;
+
+            document.getElementById("fremtidResultat").innerHTML = `
+                <strong>Fremtid</strong><br>
+                + 11 timer: ${formaterTid(pluss11)}<br>
+                + 36 timer: ${formaterTid(pluss36)}
+            `;
+        }
+
+        function toggleSluttTid() {
+            let sluttTidDiv = document.getElementById("sluttTidDiv");
+            sluttTidDiv.classList.toggle("hidden");
+        }
+
+        function beregnMellom() {
+            let startTid = new Date(document.getElementById("startTid").value);
+            let sluttTid = new Date(document.getElementById("sluttTid").value);
+
+            if (isNaN(startTid) || isNaN(sluttTid)) {
+                alert("Velg begge tidspunktene!");
+                return;
+            }
+
+            let diffTimer = Math.abs(sluttTid - startTid) / (1000 * 60 * 60);
+            document.getElementById("mellomResultat").innerText = `Forskjell: ${diffTimer.toFixed(2)} timer`;
+        }
+
+        function formaterTid(dato) {
+            return dato.toLocaleString("no-NO", { hour: "2-digit", minute: "2-digit", weekday: "long", day: "2-digit", month: "2-digit" });
+        }
+    </script>
+
+</body>
+</html>

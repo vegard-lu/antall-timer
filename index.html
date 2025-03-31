@@ -20,7 +20,7 @@
             border-radius: 10px; 
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
-        h2 { color: #444; }
+        h2, h3 { color: #444; }
         label { font-weight: bold; display: block; margin-top: 10px; }
         input, button { margin-top: 5px; padding: 10px; width: 100%; border-radius: 5px; border: 1px solid #ccc; }
         button { 
@@ -31,7 +31,7 @@
         }
         button:hover { background-color: #0056b3; }
         .result-box {
-            margin-top: 15px; 
+            margin-top: 10px; 
             padding: 10px; 
             border-radius: 5px; 
             font-weight: bold; 
@@ -41,6 +41,13 @@
         .divider { margin: 20px 0; height: 1px; background-color: #ccc; }
         .checkbox-container { text-align: left; margin-top: 15px; }
         .hidden { display: none; }
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+        }
     </style>
 </head>
 <body>
@@ -55,8 +62,19 @@
 
         <div class="divider"></div>
 
-        <div class="result-box past" id="fortidResultat"></div>
-        <div class="result-box future" id="fremtidResultat"></div>
+        <!-- Ny inndeling for 11 timers opphold -->
+        <div class="result-container">
+            <h3>11t Opphold mellom dagsverk</h3>
+            <div class="result-box past" id="fortid11"></div>
+            <div class="result-box future" id="fremtid11"></div>
+        </div>
+
+        <!-- Ny inndeling for 36 timers hviletid -->
+        <div class="result-container">
+            <h3>36t Ukentlig hviletid</h3>
+            <div class="result-box past" id="fortid36"></div>
+            <div class="result-box future" id="fremtid36"></div>
+        </div>
 
         <div class="checkbox-container">
             <label>
@@ -85,16 +103,20 @@
             let minus36 = new Date(startTid.getTime() - 36 * 60 * 60 * 1000);
             let pluss36 = new Date(startTid.getTime() + 36 * 60 * 60 * 1000);
 
-            document.getElementById("fortidResultat").innerHTML = `
-                <strong>Fortid</strong><br>
-                - 11 timer: ${formaterTid(minus11)}<br>
-                - 36 timer: ${formaterTid(minus36)}
+            // Oppdater boksene for 11 timers opphold
+            document.getElementById("fortid11").innerHTML = `
+                <strong>- 11 timer:</strong> ${formaterTid(minus11)}
+            `;
+            document.getElementById("fremtid11").innerHTML = `
+                <strong>+ 11 timer:</strong> ${formaterTid(pluss11)}
             `;
 
-            document.getElementById("fremtidResultat").innerHTML = `
-                <strong>Fremtid</strong><br>
-                + 11 timer: ${formaterTid(pluss11)}<br>
-                + 36 timer: ${formaterTid(pluss36)}
+            // Oppdater boksene for 36 timers hviletid
+            document.getElementById("fortid36").innerHTML = `
+                <strong>- 36 timer:</strong> ${formaterTid(minus36)}
+            `;
+            document.getElementById("fremtid36").innerHTML = `
+                <strong>+ 36 timer:</strong> ${formaterTid(pluss36)}
             `;
         }
 
